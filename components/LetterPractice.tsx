@@ -1,0 +1,18 @@
+'use client';
+import { useEffect, useRef, useState } from 'react';
+import { Apple, Bird, Cat, Dribbble, Volume2, VolumeX } from 'lucide-react';
+import { PhonicsMark } from './PhonicsMark';
+const cards = [
+ {letter:'A',word:'Apple',arabic:'تفاحة',icon:Apple,paper:'#f8e4da',ink:'#94452f'},
+ {letter:'B',word:'Ball',arabic:'كرة',icon:Dribbble,paper:'#eee5f7',ink:'#624a92'},
+ {letter:'C',word:'Cat',arabic:'قطة',icon:Cat,paper:'#e4efe4',ink:'#42644d'},
+ {letter:'D',word:'Duck',arabic:'بطة',icon:Bird,paper:'#f7edca',ink:'#72551e'},
+];
+export function LetterPractice({arabic}:{arabic:boolean}) {
+ const [active,setActive]=useState(0),[muted,setMuted]=useState(false),[playing,setPlaying]=useState(false),[failed,setFailed]=useState(false);
+ const audio=useRef<HTMLAudioElement>(null),playRequest=useRef(0),card=cards[active],Picture=card.icon;
+ useEffect(()=>{const player=audio.current;return()=>player?.pause()},[]);
+ function select(index:number){setActive(index);setFailed(false);const player=audio.current;if(!player||muted)return;const request=++playRequest.current;player.src='/audio/letter-'+cards[index].letter.toLowerCase()+'.mp3';setPlaying(true);player.play().catch(()=>{if(request!==playRequest.current)return;setPlaying(false);setFailed(true)})}
+ function toggleMute(){if(!muted){playRequest.current++;audio.current?.pause();setPlaying(false)}setMuted(!muted)}
+ return <section id="practice" className="practice-section section-space"><div className="shell practice-layout"><div className="lesson-copy"><p className="eyebrow">{arabic?'بطاقات الحروف':'The listening table'}</p><h2 className="heading section-title">{arabic?'اختاروا حرفًا واستمعوا':'Pick a letter. Say it together.'}</h2><p>{arabic?'اختاروا بطاقة من A إلى D لسماع اسم الحرف وكلمة تبدأ به. استمعوا أولًا، ثم كرّروا الكلمة معًا وابحثوا عن شيء يشبه الصورة.':'Choose a card from A to D to hear its letter name and an example word. Listen once, say the word together, then look for something that matches the picture.'}</p><PhonicsMark variant="letter" className="h-12 w-12 text-purple"/></div><div className="practice-board"><div className="practice-toolbar"><span>{arabic?'الحروف الأربعة الأولى':'The first four letters'}</span><button type="button" className="practice-control" aria-pressed={muted} onClick={toggleMute}>{muted?<VolumeX size={17}/>:<Volume2 size={17}/>} {arabic?'كتم الصوت':'Mute sound'}</button></div><div className="practice-card" style={{background:card.paper,color:card.ink}} dir="ltr"><div><p className="practice-letter" aria-hidden="true">{card.letter}<span>{card.letter.toLowerCase()}</span></p><p className="practice-word" lang="en">{card.word}</p>{arabic&&<p className="practice-translation" lang="ar">{card.arabic}</p>}</div><Picture className="practice-picture" strokeWidth={1.35} aria-hidden="true"/></div><div className="practice-keys" dir="ltr" aria-label={arabic?'اختيار الحرف':'Choose a letter'}>{cards.map(({letter,word},index)=><button type="button" key={letter} aria-label={arabic?'استمع إلى '+letter:'Hear '+letter+' for '+word} aria-pressed={active===index} onClick={()=>select(index)}>{letter}</button>)}</div><div className="practice-footer"><button type="button" className="practice-control" onClick={()=>select(active)} disabled={muted}><Volume2 size={17}/>{playing?(arabic?'يتم التشغيل':'Playing'):(arabic?'استمعوا مجددًا':'Listen again')}</button><p role="status">{failed&&(arabic?'تعذّر تشغيل الصوت. حاولوا مجددًا.':'Audio couldn’t play. Try again.')}</p></div><audio ref={audio} preload="none" onEnded={()=>setPlaying(false)}/></div></div></section>;
+}
