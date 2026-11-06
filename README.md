@@ -19,7 +19,7 @@ Open http://localhost:3000.
 - Lucide icons
 - Nunito and Cairo variable fonts
 - English/Arabic language switch and RTL layout
-- Interactive A/B/C/D letter-practice cards, parent learning sections, guides, FAQ-style resources and contact actions
+- Sections: hero, method, A–D letter practice, sound hunt, My Brave Brother book, Meet Suzanne, Lafta podcast, parent guides, FAQ accordion, contact and footer
 
 ## Deployment
 
@@ -31,9 +31,15 @@ npm run build
 
 Deploy the generated `out/` directory to a static host.
 
-## Media note
+## Media
 
-The source archive also contains audio clips and original image assets. Those binary media files are not part of this initial source upload; add the original `public/audio/` and `public/images/` directories from the supplied project archive before publishing the final production build. The letter-practice component expects `/audio/letter-a.mp3` through `/audio/letter-d.mp3`.
+Photos live in `public/images/`:
+
+- `suzanne-classroom.webp` — hero photo
+- `suzanne-teaching.webp` — Meet Suzanne photo
+- `my-brave-brother.webp` — book section
+
+Audio clips are not included yet. The letter-practice component expects `/audio/letter-a.mp3` through `/audio/letter-d.mp3` in `public/audio/`; until they are added, the card shows a friendly "Audio couldn’t play" message.
 
 ## Commerce and launch checklist
 
